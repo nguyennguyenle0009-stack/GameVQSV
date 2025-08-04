@@ -21,7 +21,7 @@ public class Player {
         this.x = startX;
         this.y = startY;
         try {
-            spriteSheet = ImageIO.read(getClass().getResource("/res/hero.png"));
+            spriteSheet = ImageIO.read(getClass().getResource("/data/player/a7.png"));
         } catch (IOException e) {
             System.err.println("[Player] Failed to load sprite.");
         }
