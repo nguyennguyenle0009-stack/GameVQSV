@@ -3,65 +3,86 @@ package game;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
 import game.screen.GameScreenManager;
 
-class GamePanel extends JPanel implements Runnable {
-    private final int WIDTH = 240;
-    private final int HEIGHT = 320;
+public class GamePanel extends JPanel {
+    public static final int WIDTH = 240;
+    public static final int HEIGHT = 320;
+
     private Thread gameThread;
+    private boolean running;
 
-    private long frameStartTime = 0L;
-    private long frameEndTime = 0L;
-    private long frameElapsedTime = 0L;
+    private BufferedImage image;
+    private Graphics g;
 
-    private boolean gamePaused = false;
-    private GameController gameController;
+    private final GameController controller;
 
     public GamePanel() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        setBackground(Color.BLACK);
         setFocusable(true);
-        gameController = GameScreenManager.getInstance();
+        requestFocus();
+
+        controller = GameScreenManager.getInstance();
+
+        addKeyListener(new KeyHandler());
     }
 
     public void startGameLoop() {
-        gameThread = new Thread(this);
-        gameThread.start();
+        if (gameThread == null) {
+            gameThread = new Thread(() -> runGameLoop());
+            gameThread.start();
+        }
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            frameStartTime = System.currentTimeMillis();
+    private void runGameLoop() {
+        init();
+
+        final int FPS = 60;
+        final long targetTime = 1000 / FPS;
+
+        while (running) {
+            long start = System.nanoTime();
 
             update();
-            repaint();
+            render();
+            draw();
 
-            frameEndTime = System.currentTimeMillis();
-            frameElapsedTime = frameEndTime - frameStartTime;
+            long elapsed = System.nanoTime() - start;
+            long wait = targetTime - elapsed / 1000000;
+            if (wait < 0) wait = 5;
 
             try {
-                Thread.sleep(Math.max(0, 16 - frameElapsedTime));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                Thread.sleep(wait);
+            } catch (Exception ignored) {}
         }
+    }
+
+    private void init() {
+        image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        g = image.getGraphics();
+        running = true;
     }
 
     private void update() {
-        if (!gamePaused && gameController != null) {
-            gameController.update();
+        controller.update();
+    }
+
+    private void render() {
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        if (controller instanceof GameScreenManager gsm) {
+            gsm.render(g);
         }
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        GameScreenManager gsm = GameScreenManager.getInstance();
-        gsm.render(g);
+    private void draw() {
+        Graphics g2 = getGraphics();
+        g2.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
+        g2.dispose();
     }
 }
-
