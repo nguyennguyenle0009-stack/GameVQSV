@@ -3,10 +3,14 @@ package game.entity;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import game.sprite.PlayerSpriteBuilder;
+
+//Lớp Player dùng lại logic cũ từ GameObject: tải sprite từ spriteSetId và vẽ nhân vật
 public class Player {
     private int x, y;
     private int speed = 2;
@@ -22,43 +26,8 @@ public class Player {
     public Player(int startX, int startY) {
         this.x = startX;
         this.y = startY;
-        loadSpriteSet();
+        this.spriteFrames = PlayerSpriteBuilder.loadSpriteSet("/data/player/img_100.png", 24, 32); // width x height mỗi frame
     }
-
-    // Tải sprite nhân vật từ các ảnh chia theo hướng và frame (ví dụ: hero_down_0.png)
-    private void loadSpriteSet() {
-        spriteFrames = new Image[4][3]; // 4 hướng x 3 frame
-        try {
-            // Load toàn bộ sprite sheet (giả đuôi .mid nhưng thực chất là PNG)
-            Image sheet = ImageIO.read(getClass().getResource("/data/player/img_100.png")); // đã đổi tên
-
-            int frameWidth = 24; // ví dụ: mỗi frame 24x32
-            int frameHeight = 32;
-
-            for (int dir = 0; dir < 4; dir++) {
-                for (int f = 0; f < 3; f++) {
-                    spriteFrames[dir][f] = ((java.awt.image.BufferedImage) sheet)
-                        .getSubimage(f * frameWidth, dir * frameHeight, frameWidth, frameHeight);
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Lỗi tải sprite sheet: " + e.getMessage());
-        }
-    }
-//    private void loadSpriteSet() {
-//        spriteFrames = new Image[4][3]; // 4 hướng, mỗi hướng 3 frame
-//        String[] dirs = {"up", "down", "left", "right"};
-//
-//        for (int d = 0; d < 4; d++) {
-//            for (int f = 0; f < 3; f++) {
-//                try {
-//                    spriteFrames[d][f] = ImageIO.read(getClass().getResource("/data/player/img_100" + dirs[d] + "_" + f + ".mid"));
-//                } catch (IOException | IllegalArgumentException e) {
-//                    System.err.println("[Player] Failed to load frame: " + dirs[d] + "_" + f);
-//                }
-//            }
-//        }
-//    }
 
     // Di chuyển theo hướng nhất định
     public void move(Direction dir) {
@@ -93,11 +62,11 @@ public class Player {
         if (frame != null) {
             g.drawImage(frame, x, y, null);
         } else {
-            g.fillRect(x, y, 16, 16); // fallback nếu thiếu ảnh
+            g.fillRect(x, y, 24, 32); // fallback nếu thiếu ảnh
         }
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y, 16, 16);
+        return new Rectangle(x, y, 24, 32);
     }
 }
