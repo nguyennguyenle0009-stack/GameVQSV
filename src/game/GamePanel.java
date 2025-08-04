@@ -26,7 +26,7 @@ public class GamePanel extends JPanel implements Runnable {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
-        gameController = new DummyGameController();
+        gameController = GameScreenManager.getInstance();
     }
 
     public void startGameLoop() {
