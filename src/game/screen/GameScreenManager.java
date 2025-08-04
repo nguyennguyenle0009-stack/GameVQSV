@@ -2,10 +2,8 @@ package game.screen;
 
 import java.awt.Graphics;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import game.GameController;
+import game.map.WorldMapScreen;
 import game.menu.MenuScreen;
 import game.state.GameState;
 
@@ -17,12 +15,14 @@ public class GameScreenManager implements GameController {
     private GameScreen currentScreen;
 
     private MenuScreen menuScreen;
-    // TODO: Thêm các màn khác như WorldMapScreen, BattleScreen...
+    private WorldMapScreen worldMapScreen;
+    // TODO: Thêm các màn khác như BattleScreen...
 
     private GameScreenManager() {
         this.currentState = GameState.STATE_MENU;
         this.previousState = -1;
         this.menuScreen = new MenuScreen();
+        this.worldMapScreen = new WorldMapScreen();
         this.currentScreen = menuScreen;
     }
 
@@ -43,9 +43,10 @@ public class GameScreenManager implements GameController {
                     if (menuScreen == null) menuScreen = new MenuScreen();
                     currentScreen = menuScreen;
                     break;
-                // case GameState.STATE_WORLD_MAP:
-                //     currentScreen = ...;
-                //     break;
+                case GameState.STATE_WORLD_MAP:
+                    if (worldMapScreen == null) worldMapScreen = new WorldMapScreen();
+                    currentScreen = worldMapScreen;
+                    break;
                 // case GameState.STATE_BATTLE:
                 //     currentScreen = ...;
                 //     break;
@@ -68,4 +69,4 @@ public class GameScreenManager implements GameController {
             currentScreen.render(g);
         }
     }
-} 
+}
