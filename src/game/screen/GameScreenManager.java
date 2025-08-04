@@ -1,7 +1,9 @@
-package game;
+package game.screen;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
+import game.GameController;
 
 public class GameScreenManager implements GameController {
     private static GameScreenManager instance;
@@ -29,3 +31,4 @@ public class GameScreenManager implements GameController {
         stateCounter++;
     }
 }
+ 

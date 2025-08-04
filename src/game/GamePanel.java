@@ -6,6 +6,8 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+import game.screen.GameScreenManager;
+
 public class GamePanel extends JPanel implements Runnable {
     private final int WIDTH = 240;
     private final int HEIGHT = 320;
