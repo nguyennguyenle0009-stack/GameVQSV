@@ -6,14 +6,14 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-class GamePanel extends JPanel {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private final int WIDTH = 240;
+class GamePanel extends JPanel implements Runnable {
+    private final int WIDTH = 240;
     private final int HEIGHT = 320;
     private Thread gameThread;
+
+    private long frameStartTime = 0L;
+    private long frameEndTime = 0L;
+    private long frameElapsedTime = 0L;
 
     public GamePanel() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -22,18 +22,27 @@ class GamePanel extends JPanel {
     }
 
     public void startGameLoop() {
-        gameThread = new Thread(() -> {
-            while (true) {
-                update();
-                repaint();
-                try {
-                    Thread.sleep(16); // ~60 FPS
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        gameThread = new Thread(this);
         gameThread.start();
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            frameStartTime = System.currentTimeMillis();
+
+            update();
+            repaint();
+
+            frameEndTime = System.currentTimeMillis();
+            frameElapsedTime = frameEndTime - frameStartTime;
+
+            try {
+                Thread.sleep(Math.max(0, 16 - frameElapsedTime));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void update() {
