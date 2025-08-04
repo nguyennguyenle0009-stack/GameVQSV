@@ -18,4 +18,4 @@ public class MainGame {
             gamePanel.startGameLoop();
         });
     }
-} 
+}

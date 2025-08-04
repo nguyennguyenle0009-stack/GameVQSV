@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 
 import game.screen.GameScreenManager;
 
-public class GamePanel extends JPanel implements Runnable {
+class GamePanel extends JPanel implements Runnable {
     private final int WIDTH = 240;
     private final int HEIGHT = 320;
     private Thread gameThread;
@@ -17,11 +17,7 @@ public class GamePanel extends JPanel implements Runnable {
     private long frameEndTime = 0L;
     private long frameElapsedTime = 0L;
 
-    // Biến logic từ GameEngineBase
     private boolean gamePaused = false;
-    private byte actionType = -1;
-    private byte currentAction = 0;
-
     private GameController gameController;
 
     public GamePanel() {
@@ -64,6 +60,8 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // TODO: Chuyển logic vẽ từ GameCanvas.paint() hoặc tương đương
+        GameScreenManager gsm = GameScreenManager.getInstance();
+        gsm.render(g);
     }
 }
+
