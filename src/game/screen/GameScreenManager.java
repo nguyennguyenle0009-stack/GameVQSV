@@ -73,4 +73,11 @@ public class GameScreenManager implements GameController {
     public GameScreen peekCurrentScreen() {
         return currentScreen;
     }
+    
+    public void keyPressed(int keyCode) {
+        if (currentScreen instanceof WorldMapScreen wms) {
+            wms.keyPressed(keyCode);
+        }
+        // else if (currentScreen instanceof BattleScreen ...) ...
+    }
 }

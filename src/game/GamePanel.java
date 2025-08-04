@@ -3,11 +3,13 @@ package game;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
 import game.screen.GameScreenManager;
+import game.state.GameState;
 
 public class GamePanel extends JPanel {
     public static final int WIDTH = 240;
@@ -27,7 +29,7 @@ public class GamePanel extends JPanel {
         requestFocus();
 
         controller = GameScreenManager.getInstance();
-
+        GameScreenManager.getInstance().changeState(GameState.STATE_WORLD_MAP);
         addKeyListener(new KeyHandler());
     }
 
@@ -84,5 +86,9 @@ public class GamePanel extends JPanel {
         Graphics g2 = getGraphics();
         g2.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
         g2.dispose();
+    }
+    
+    public void keyPressed(KeyEvent e) {
+        GameScreenManager.getInstance().keyPressed(e.getKeyCode());
     }
 }

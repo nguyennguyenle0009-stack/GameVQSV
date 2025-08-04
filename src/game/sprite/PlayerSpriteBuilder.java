@@ -22,6 +22,11 @@ public class PlayerSpriteBuilder {
     public static Image[][] loadSpriteSet(String resourcePath, int frameW, int frameH) {
         try {
             BufferedImage spriteSheet = ImageIO.read(PlayerSpriteBuilder.class.getResourceAsStream(resourcePath));
+            if (spriteSheet == null) {
+                System.err.println("[PlayerSpriteBuilder] Không tìm thấy file ảnh: " + resourcePath);
+            } else {
+                System.out.println("[PlayerSpriteBuilder] Đã load ảnh: " + resourcePath + " với kích thước: " + spriteSheet.getWidth() + "x" + spriteSheet.getHeight());
+            }
             int layerCount = spriteSheet.getHeight() / (frameH * DIRECTIONS);
             List<BufferedImage[][]> layers = new ArrayList<>();
 

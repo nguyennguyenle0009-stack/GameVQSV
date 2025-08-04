@@ -27,9 +27,13 @@ public class Player {
         this.x = startX;
         this.y = startY;
         this.spriteFrames = PlayerSpriteBuilder.loadSpriteSet("/data/player/img_100.png", 24, 32); // width x height mỗi frame
+
+        // Debug nếu không load được ảnh
+        if (spriteFrames == null || spriteFrames.length == 0 || spriteFrames[0][0] == null) {
+            System.err.println("[Player] Không load được spriteFrames!");
+        }
     }
 
-    // Di chuyển theo hướng nhất định
     public void move(Direction dir) {
         this.direction = dir;
         switch (dir) {
@@ -40,7 +44,6 @@ public class Player {
         }
     }
 
-    // Cập nhật frame animation
     public void update() {
         delayCounter++;
         if (delayCounter >= frameDelay) {
@@ -49,7 +52,6 @@ public class Player {
         }
     }
 
-    // Vẽ nhân vật
     public void render(Graphics g) {
         int dirIndex = switch (direction) {
             case UP -> 0;
@@ -58,11 +60,19 @@ public class Player {
             case RIGHT -> 3;
         };
 
-        Image frame = spriteFrames[dirIndex][frameIndex];
-        if (frame != null) {
-            g.drawImage(frame, x, y, null);
-        } else {
-            g.fillRect(x, y, 24, 32); // fallback nếu thiếu ảnh
+        try {
+            Image frame = spriteFrames[dirIndex][frameIndex];
+            if (frame != null) {
+                g.drawImage(frame, x, y, null);
+            } else {
+                g.setColor(java.awt.Color.RED);
+                g.fillRect(x, y, 24, 32);
+                System.err.println("[Player] Thiếu frame ảnh tại dir=" + dirIndex + ", frame=" + frameIndex);
+            }
+        } catch (Exception e) {
+            System.err.println("[Player] Lỗi khi vẽ nhân vật: " + e.getMessage());
+            g.setColor(java.awt.Color.RED);
+            g.fillRect(x, y, 24, 32);
         }
     }
 
