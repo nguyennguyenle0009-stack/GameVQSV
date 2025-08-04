@@ -6,7 +6,7 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable {
     private final int WIDTH = 240;
     private final int HEIGHT = 320;
     private Thread gameThread;
@@ -15,10 +15,18 @@ class GamePanel extends JPanel implements Runnable {
     private long frameEndTime = 0L;
     private long frameElapsedTime = 0L;
 
+    // Biến logic từ GameEngineBase
+    private boolean gamePaused = false;
+    private byte actionType = -1;
+    private byte currentAction = 0;
+
+    private GameController gameController;
+
     public GamePanel() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
+        gameController = new DummyGameController();
     }
 
     public void startGameLoop() {
@@ -46,7 +54,9 @@ class GamePanel extends JPanel implements Runnable {
     }
 
     private void update() {
-        // TODO: Chuyển logic update từ GameCanvas.java ở đây
+        if (!gamePaused && gameController != null) {
+            gameController.update();
+        }
     }
 
     @Override
