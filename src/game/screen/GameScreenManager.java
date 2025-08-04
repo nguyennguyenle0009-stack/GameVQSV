@@ -1,20 +1,29 @@
 package game.screen;
 
+import java.awt.Graphics;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import game.GameController;
+import game.menu.MenuScreen;
+import game.state.GameState;
 
 public class GameScreenManager implements GameController {
     private static GameScreenManager instance;
+
     private byte currentState;
     private byte previousState;
-    private int stateCounter;
+    private GameScreen currentScreen;
+
+    private MenuScreen menuScreen;
+    // TODO: Thêm các màn khác như WorldMapScreen, BattleScreen...
 
     private GameScreenManager() {
-        currentState = 0;
-        previousState = -1;
-        stateCounter = 0;
+        this.currentState = GameState.STATE_MENU;
+        this.previousState = -1;
+        this.menuScreen = new MenuScreen();
+        this.currentScreen = menuScreen;
     }
 
     public static GameScreenManager getInstance() {
@@ -24,11 +33,39 @@ public class GameScreenManager implements GameController {
         return instance;
     }
 
+    public void changeState(byte newState) {
+        if (currentState != newState) {
+            previousState = currentState;
+            currentState = newState;
+
+            switch (currentState) {
+                case GameState.STATE_MENU:
+                    if (menuScreen == null) menuScreen = new MenuScreen();
+                    currentScreen = menuScreen;
+                    break;
+                // case GameState.STATE_WORLD_MAP:
+                //     currentScreen = ...;
+                //     break;
+                // case GameState.STATE_BATTLE:
+                //     currentScreen = ...;
+                //     break;
+                default:
+                    System.out.println("[GameScreenManager] Unknown state: " + currentState);
+                    break;
+            }
+        }
+    }
+
     @Override
     public void update() {
-        // TODO: Di chuyển logic cập nhật màn chơi ở đây
-        System.out.println("[GameScreenManager] Updating state: " + currentState);
-        stateCounter++;
+        if (currentScreen != null) {
+            currentScreen.update();
+        }
     }
-}
- 
+
+    public void render(Graphics g) {
+        if (currentScreen != null) {
+            currentScreen.render(g);
+        }
+    }
+} 
