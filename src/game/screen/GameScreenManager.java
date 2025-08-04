@@ -69,4 +69,8 @@ public class GameScreenManager implements GameController {
             currentScreen.render(g);
         }
     }
+    
+    public GameScreen peekCurrentScreen() {
+        return currentScreen;
+    }
 }
