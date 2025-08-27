@@ -1,0 +1,12 @@
+Initial project setup for Spring Boot and Angular:
+
+1. Back-end (Spring Boot)
+   - Navigate to ServiceWebApp
+   - Run `./mvnw spring-boot:run` to start the API on http://localhost:8080
+
+2. Front-end (Angular)
+   - Navigate to my-app
+   - Run `npm install` to install dependencies
+   - Run `ng serve` to launch the UI on http://localhost:4200
+
+These commands verify dependencies and start both services for development.
