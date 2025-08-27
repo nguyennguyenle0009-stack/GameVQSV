@@ -1,0 +1,9 @@
+Authentication features to implement:
+- User registration
+- Login and logout
+- Optional: email verification and password reset
+- Password change
+- Profile viewing
+- Role-based access control: USER (default), ADMIN, optionally MODERATOR
+- Authentication method: JSON Web Token (access & refresh tokens)
+- Non-functional requirements: audit logging, rate limiting, CORS configuration, deployment via Docker

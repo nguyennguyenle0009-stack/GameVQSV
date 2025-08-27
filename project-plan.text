@@ -1,0 +1,31 @@
+Stack:
+- Backend: Spring Boot 3.3, Spring Security 6, JWT (jjwt), JPA/Hibernate
+- Database: PostgreSQL with tables users, roles, user_roles, refresh_tokens
+- Frontend (optional): React/Vite or Thymeleaf
+
+Data design:
+- users(id, email UNIQUE, password_hash, is_verified, created_at, updated_at)
+- roles(id, name) seeded with USER and ADMIN
+- user_roles(user_id, role_id)
+- refresh_tokens(id, user_id, token_hash, expires_at, revoked_at)
+
+Business flow:
+- Register: hash password with BCrypt 10–12, optionally send verify email
+- Login: issue short-lived access_token and long-lived refresh_token
+- Logout: revoke refresh token
+- Authorization: protect routes using annotations, e.g. @PreAuthorize("hasRole('ADMIN')")
+
+API overview:
+- POST /auth/register (email, password)
+- POST /auth/login (email, password)
+- POST /auth/refresh (refresh_token)
+- POST /auth/logout
+- GET /me (requires Bearer token)
+- Admin example: GET /admin/users (ROLE_ADMIN)
+
+Security notes:
+- Use BCrypt for passwords
+- Sign JWT with HS256/RS256, rotate & blacklist refresh tokens
+- Disable CSRF in stateless JWT mode
+- Rate limit login/register and validate input
+- Restrict CORS by origin
